@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin Dashboard — Mastering Electricity</title>
+  <style>
+    body{ font-family: Arial, sans-serif; margin:0; background:#fafafa; }
+    header{ background:#111; color:#fff; padding:14px 20px; display:flex; justify-content:space-between; align-items:center; }
+    main{ padding:20px; }
+    button{ padding:8px 12px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <header>
+    <div>Mastering Electricity — Admin</div>
+    <div><button id="signOutBtn">Sign out</button></div>
+  </header>
+
+  <main>
+    <h2>Welcome, Admin</h2>
+    <p id="info">Checking authentication...</p>
+
+    <!-- Placeholder admin tools -->
+    <section id="tools" style="display:none;">
+      <h3>Tools</h3>
+      <p>Here you will be able to add posts, upload project photos, manage supporters, etc. (We will wire this to Firestore + Storage next.)</p>
+      <button id="openPostMaker">Open Post Maker (coming next)</button>
+    </section>
+  </main>
+
+  <script type="module" src="./auth.js"></script>
+  <script>
+    const signOutBtn = document.getElementById('signOutBtn');
+    signOutBtn.addEventListener('click', async () => {
+      try {
+        await window.appSignOut();
+        location.href = '/auth/login.html'; // adjust path if needed
+      } catch(e) { alert('Sign out failed: '+e.message); }
+    });
+
+    // When user is authenticated, auth.js populates window.currentUser and triggers window.onAuthReady
+    window.onAuthReady = (user) => {
+      if (user) {
+        document.getElementById('info').innerText = `Signed in as ${user.email} (uid: ${user.uid})`;
+        document.getElementById('tools').style.display = 'block';
+      } else {
+        // not signed in - redirect
+        location.href = '/auth/login.html';
+      }
+    };
+  </script>
+</body>
+</html>
